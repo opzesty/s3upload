@@ -11,14 +11,7 @@ FILES_ROOT=$1
 
 echo "Uploading files in '$FILES_ROOT' to s3:"
 
-pushd ${FILES_ROOT}
-FILES=$(find . -type f)
+find -L ${FILES_ROOT} -type f -exec shrimp --force --region us-gov-east-1 --compute-checksum {} s3://{} \;
 
-for FILE in ${FILES}
-do
-	REL_FILE_PATH=$(echo ${FILE} | cut -c 3-)
-	echo shrimp --force --region ${REGION} --compute-checksum ${REL_FILE_PATH} s3://${BUCKET}/${REL_FILE_PATH}
-done
-popd
 
 exit 0
